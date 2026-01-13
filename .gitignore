@@ -37,7 +37,7 @@ DOCUMENTATION_RESTRUCTURE_PLAN.md
 
 # Local scripts and development tools
 *.sh
-scripts/
+/scripts/
 
 # Development logs
 logs/
