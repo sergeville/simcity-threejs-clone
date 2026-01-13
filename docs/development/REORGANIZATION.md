@@ -173,6 +173,103 @@ files: 8 files moved, 2 new READMEs created
 
 ---
 
+## Phase 2: All File Types (2026-01-13)
+
+Extended reorganization to cover ALL file types, not just markdown.
+
+### Additional Files Organized
+
+**Shell Scripts:**
+```
+sim.sh → scripts/sim.sh
+```
+
+**Log Files:**
+```
+sim.log → logs/sim.log
+dev_server.log → logs/dev_server.log
+```
+
+**Reference PDFs:**
+```
+SC4rh_deluxe_manual.pdf → docs/references/
+SimCity_2013.pdf → docs/references/
+claude.md.pdf → docs/references/
+```
+
+**Images:**
+```
+myCity.jpg → docs/images/screenshots/
+NotebookLM Mind Map.png → docs/images/references/
+NotebookLM Mind Map (1).png → docs/images/references/
+ace.jpg → docs/images/references/
+ACE Shines.jpg → docs/images/references/
+```
+
+### New Folders Created
+
+**scripts/**
+- Development helper scripts
+- Currently contains sim.sh
+- Git-ignored
+
+**logs/**
+- Development logs
+- Automatically generated
+- Git-ignored
+
+**docs/references/**
+- External reference materials
+- SimCity manuals, project docs
+- Git-ignored
+
+**docs/images/**
+- screenshots/ - Game screenshots
+- references/ - Planning diagrams, mind maps
+- Git-ignored
+
+### Updated Documentation
+
+Created 4 new README files:
+- `scripts/README.md` - Development scripts guide
+- `logs/README.md` - Log files documentation
+- `docs/references/README.md` - Reference materials index
+- `docs/images/README.md` - Image organization guide
+
+Updated `.gitignore`:
+- Added scripts/ folder
+- Added logs/ folder
+- Added docs/references/ folder
+- Added docs/images/ folder
+
+### Final Root Folder
+
+**Tracked files only:**
+```
+/
+├── README.md
+├── CLAUDE.md
+├── package.json
+├── package-lock.json
+├── vite.config.js
+├── LICENSE
+├── .gitignore (updated)
+├── docs/ (organized subdirectories)
+├── src/ (source code)
+└── node_modules/ (dependencies)
+```
+
+**All personal files organized:**
+- Scripts → scripts/
+- Logs → logs/
+- References → docs/references/
+- Images → docs/images/
+
+---
+
 **Date**: 2026-01-13
 **Author**: Managed with Claude Code
-**Impact**: 8 files moved, 2 READMEs created, documentation index updated
+**Impact**:
+- Phase 1: 8 files moved, 2 READMEs created
+- Phase 2: 11 files moved, 4 folders created, 4 READMEs created
+- Total: 19 files organized, 6 READMEs created

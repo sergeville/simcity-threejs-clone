@@ -35,5 +35,13 @@ DOCUMENTATION_RESTRUCTURE_PLAN.md
 !src/public/**/*.png
 !src/public/**/*.jpg
 
-# Local scripts
+# Local scripts and development tools
 *.sh
+scripts/
+
+# Development logs
+logs/
+
+# Reference materials (PDFs, images, screenshots)
+docs/references/
+docs/images/
