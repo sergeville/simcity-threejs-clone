@@ -260,6 +260,112 @@ When creating new development scripts:
    - Provide clear error messages
    - Exit with appropriate codes (0=success, 1=error)
 
+## Shell Aliases for Quick Access
+
+For even faster access, you can create shell aliases to run sim.sh commands from anywhere on your system.
+
+### Setup Instructions
+
+#### For Bash Users
+
+1. **Open your bash configuration file:**
+   ```bash
+   nano ~/.bashrc
+   # or on macOS:
+   nano ~/.bash_profile
+   ```
+
+2. **Add the following aliases** (replace `USERNAME` with your actual username):
+   ```bash
+   # SimCity Project Management Aliases
+   alias simStart='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh start)'
+   alias simStop='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh stop)'
+   alias simRestart='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh restart)'
+   alias simStatus='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh status)'
+   alias simClean='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh clean)'
+   alias simLogs='tail -f /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone/logs/sim.log'
+   ```
+
+3. **Reload your shell configuration:**
+   ```bash
+   source ~/.bashrc
+   # or on macOS:
+   source ~/.bash_profile
+   ```
+
+#### For Zsh Users (macOS default)
+
+1. **Open your zsh configuration file:**
+   ```bash
+   nano ~/.zshrc
+   ```
+
+2. **Add the same aliases** (replace `USERNAME` with your actual username):
+   ```bash
+   # SimCity Project Management Aliases
+   alias simStart='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh start)'
+   alias simStop='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh stop)'
+   alias simRestart='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh restart)'
+   alias simStatus='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh status)'
+   alias simClean='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh clean)'
+   alias simLogs='tail -f /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone/logs/sim.log'
+   ```
+
+3. **Reload your shell configuration:**
+   ```bash
+   source ~/.zshrc
+   ```
+
+### Finding Your Project Path
+
+If you're not sure of the exact path, navigate to the project directory and run:
+
+```bash
+pwd
+```
+
+Copy the output and replace the path in the aliases above.
+
+### Usage After Setup
+
+Once aliases are configured, you can manage the server from anywhere:
+
+```bash
+# From any directory:
+simStart       # Start the development server
+simStatus      # Check server status
+simLogs        # Watch logs in real-time (Ctrl+C to exit)
+simRestart     # Restart the server
+simStop        # Stop the server
+simClean       # Stop and clean logs
+```
+
+**Example workflow:**
+```bash
+~ $ simStart
+Starting SimCity Clone on port 3000...
+Server started in background. Visit http://127.0.0.1:3000/simcity-threejs-clone/
+
+~ $ simStatus
+COMMAND   PID   USER   FD   TYPE   DEVICE   SIZE/OFF NODE NAME
+node    12345  user   21u  IPv4  0x123...      0t0  TCP *:3000 (LISTEN)
+
+~ $ cd ~/Desktop
+~/Desktop $ simLogs
+# Watching logs from anywhere...
+
+~/Desktop $ simStop
+Searching for SimCity process on port 3000...
+SimCity service (PID 12345) has been shut down.
+```
+
+### Benefits of Using Aliases
+
+- ✅ **Work from any directory** - No need to cd into project folder
+- ✅ **Shorter commands** - Type `simStart` instead of `./scripts/sim.sh start`
+- ✅ **Watch logs easily** - `simLogs` is much shorter than the full tail command
+- ✅ **Consistent workflow** - Same commands work regardless of current directory
+
 ## Alternative: Direct npm Commands
 
 You can also run the dev server directly without using the script:
