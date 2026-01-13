@@ -236,7 +236,7 @@ h1 {
 
 #activity-feed {
   position: fixed;
-  top: 80px;
+  bottom: 40px;
   right: 16px;
   width: 400px;
   max-height: 300px;
