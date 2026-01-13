@@ -6,6 +6,7 @@ import { VehicleGraph } from './vehicles/vehicleGraph.js';
 import { PowerService } from './services/power.js';
 import { EconomyService } from './services/economy.js';
 import { CitizenManager } from './services/citizenManager.js';
+import { DisasterService } from './services/disasterService.js';
 import { SimService } from './services/simService.js';
 import { TerrainGenerator } from './terrainGenerator.js';
 import { TimeManager } from './timeManager.js';
@@ -80,6 +81,7 @@ export class City extends THREE.Group {
     this.services = [];
     this.services.push(new EconomyService());
     this.services.push(new PowerService());
+    this.services.push(new DisasterService());
 
     // Create citizen manager for visual representation
     const citizenManager = new CitizenManager();
