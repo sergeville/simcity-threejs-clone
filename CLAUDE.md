@@ -2,6 +2,21 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Documentation Structure
+
+This repository uses organized documentation in `/docs/`:
+
+- **[/docs/features/](docs/features/)**: Game mechanics (disasters, economy, citizens)
+- **[/docs/development/](docs/development/)**: Contributing and AI-assisted development guides
+- **[/docs/architecture/](docs/architecture/)**: Technical architecture (services, rendering, simulation)
+- **[/docs/ai-workflows/](docs/ai-workflows/)**: AI context management and workflows
+
+When working on this project:
+1. **Read this file (CLAUDE.md)** for architecture and patterns
+2. **Consult `/docs/features/`** for specific feature documentation
+3. **See `/docs/development/`** for contributing guidelines and AI workflows
+4. **Reference `/docs/architecture/`** for deep technical details
+
 ## Repository Overview
 
 This is a SimCity clone built with Three.js and Vite. The project is a city-building simulation game where players can place buildings, roads, and manage city services like power. The game runs in the browser and features a 3D isometric view.

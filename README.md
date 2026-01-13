@@ -14,6 +14,27 @@ After that, clone this repository, navigate to the root directory and run the fo
 npm run dev
 ```
 
+## Documentation
+
+Comprehensive documentation is available in the [`/docs`](docs/) folder:
+
+- **[Features](docs/features/)** - Game mechanics and features
+  - [Disaster System](docs/features/disasters.md) - Fires, floods, and emergencies
+- **[Development](docs/development/)** - Contributing and development guides
+  - [Contributing Guide](docs/development/CONTRIBUTING.md) - How to contribute
+  - [AI-Assisted Development](docs/development/AI_ASSISTED_DEV.md) - AI development practices
+- **[Architecture](docs/architecture/)** - Technical architecture
+  - [Services](docs/architecture/services.md) - Service pattern
+  - [Rendering](docs/architecture/rendering.md) - Three.js rendering system
+  - [Simulation](docs/architecture/simulation.md) - Simulation loop
+- **[AI Workflows](docs/ai-workflows/)** - AI-assisted development guides
+  - [Context Management](docs/ai-workflows/CONTEXT_MANAGEMENT.md) - Managing AI context across sessions
+
+**Quick Links**:
+- [CLAUDE.md](CLAUDE.md) - AI assistant guide (for Claude Code users)
+- [Contributing](docs/development/CONTRIBUTING.md) - How to contribute
+- [Full Documentation Index](docs/README.md)
+
 ## How did you make this?
 
 Want to know how I made this? Follow the YouTube tutorial series [here](https://www.youtube.com/playlist?list=PLtzt35QOXmkJ9unmoeA5gXHcscQHJVQpW)

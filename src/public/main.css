@@ -236,7 +236,7 @@ h1 {
 
 #activity-feed {
   position: fixed;
-  bottom: 48px;
+  top: 80px;
   right: 16px;
   width: 400px;
   max-height: 300px;
@@ -338,6 +338,10 @@ h1 {
 
 /* Citizen Stats Panel */
 #citizen-stats-panel {
+  position: fixed;
+  bottom: 120px;
+  left: 88px;
+  width: 280px;
   background-color: #00000070;
   border-radius: 8px;
   padding: 12px;

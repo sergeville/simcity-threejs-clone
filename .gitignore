@@ -22,3 +22,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Analysis and planning documents (local only)
+AI_GUIDE_ANALYSIS.md
+DOCUMENTATION_RESTRUCTURE_PLAN.md
+
+# Images and PDFs (not for repo, except public assets)
+*.jpg
+*.jpeg
+*.png
+*.pdf
+!src/public/**/*.png
+!src/public/**/*.jpg
+
+# Local scripts
+*.sh
