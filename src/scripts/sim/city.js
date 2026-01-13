@@ -481,7 +481,7 @@ export class City extends THREE.Group {
       }
 
       // Place building on tile
-      tile.building = building;
+      tile.setBuilding(building);
       building.x = tileData.x;
       building.y = tileData.y;
       building.position.set(tileData.x, 0, tileData.y);
@@ -528,12 +528,18 @@ export class City extends THREE.Group {
             tile.building.jobs.workers.push(citizen);
 
             // Restore workplace reference
-            if (citizen.workplaceId === `${tile.x},${tile.y}`) {
+            if (citizen._workplaceId === `${tile.x},${tile.y}`) {
               citizen.workplace = tile.building;
             }
           }
         }
       }
+    }
+
+    // Clean up temporary properties
+    for (const citizen of citizenInstances.values()) {
+      delete citizen._workplaceId;
+      delete citizen._professionName;
     }
 
     // Refresh all building views
