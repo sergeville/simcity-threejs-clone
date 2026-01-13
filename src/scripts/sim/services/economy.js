@@ -73,6 +73,9 @@ export class EconomyService extends SimService {
     this.monthlyIncome = 0;
     this.monthlyExpenses = 0;
 
+    // Process economic cycle (salaries, rent, spending)
+    this.#processEconomicCycle(city);
+
     // Calculate tax revenue
     this.monthlyIncome += this.#calculateTaxRevenue(city);
 
@@ -82,6 +85,95 @@ export class EconomyService extends SimService {
     // Apply net budget
     const netRevenue = this.monthlyIncome - this.monthlyExpenses;
     this.funds += netRevenue;
+
+    // Activity feed summary
+    if (window.activityFeed) {
+      const netColor = netRevenue >= 0 ? 'positive' : 'negative';
+      window.activityFeed.economy(
+        `Monthly budget: +$${this.monthlyIncome.toFixed(0)} income, -$${this.monthlyExpenses.toFixed(0)} expenses = ${netRevenue >= 0 ? '+' : ''}$${netRevenue.toFixed(0)}`,
+        netRevenue >= 0 ? '📈' : '📉'
+      );
+    }
+  }
+
+  /**
+   * Process monthly economic cycle (salaries, rent, spending)
+   * @param {City} city
+   */
+  #processEconomicCycle(city) {
+    // 1. Pay salaries to all workers
+    for (let x = 0; x < city.size; x++) {
+      for (let y = 0; y < city.size; y++) {
+        const tile = city.getTile(x, y);
+        const building = tile?.building;
+
+        if ((building?.type === 'commercial' || building?.type === 'industrial') && building.jobs) {
+          for (const worker of building.jobs.workers) {
+            worker.receiveSalary(worker.salary);
+          }
+        }
+      }
+    }
+
+    // 2. Collect rent from residents
+    for (let x = 0; x < city.size; x++) {
+      for (let y = 0; y < city.size; y++) {
+        const tile = city.getTile(x, y);
+        const building = tile?.building;
+
+        if (building?.type === 'residential' && building.residents) {
+          const residents = building.residents.getResidents();
+          const rentPerResident = 300; // $300/month base rent
+
+          for (const resident of residents) {
+            resident.rent = rentPerResident;
+            const paid = resident.payRent(rentPerResident);
+
+            // If can't pay rent, happiness decreases
+            if (!paid) {
+              resident.needs.happiness = Math.max(0, resident.needs.happiness - 10);
+            }
+          }
+        }
+      }
+    }
+
+    // 3. Citizens spend money at commercial buildings
+    for (let x = 0; x < city.size; x++) {
+      for (let y = 0; y < city.size; y++) {
+        const tile = city.getTile(x, y);
+        const building = tile?.building;
+
+        if (building?.type === 'residential' && building.residents) {
+          const residents = building.residents.getResidents();
+
+          for (const resident of residents) {
+            // Citizens spend a portion of their money on goods/services
+            const spendingBudget = Math.min(resident.money * 0.3, 200); // Spend up to 30% or $200
+
+            if (spendingBudget > 0) {
+              // Find nearby commercial building
+              const commercialTile = city.findTile(
+                resident.residence,
+                (t) => t.building?.type === 'commercial',
+                5 // Search within 5 tiles
+              );
+
+              if (commercialTile) {
+                const spent = resident.spend(spendingBudget);
+                if (spent && commercialTile.building.revenue !== undefined) {
+                  // Commercial building earns revenue
+                  commercialTile.building.revenue = (commercialTile.building.revenue || 0) + spendingBudget;
+
+                  // Increase happiness from shopping
+                  resident.needs.happiness = Math.min(100, resident.needs.happiness + 2);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
   }
 
   /**

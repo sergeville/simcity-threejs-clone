@@ -65,6 +65,18 @@ export class Citizen {
     this.salary = 0;
 
     /**
+     * Current money/savings
+     * @type {number}
+     */
+    this.money = 1000; // Start with $1000
+
+    /**
+     * Monthly rent owed
+     * @type {number}
+     */
+    this.rent = 0;
+
+    /**
      * Citizen's needs (health, safety, education, happiness)
      * @type {CitizenNeeds}
      */
@@ -331,6 +343,49 @@ export class Citizen {
   }
 
   /**
+   * Receive salary payment
+   * @param {number} amount
+   */
+  receiveSalary(amount) {
+    this.money += amount;
+  }
+
+  /**
+   * Pay rent
+   * @param {number} amount
+   * @returns {boolean} True if payment successful
+   */
+  payRent(amount) {
+    if (this.money >= amount) {
+      this.money -= amount;
+      return true;
+    }
+    return false; // Cannot afford rent
+  }
+
+  /**
+   * Spend money at a commercial building
+   * @param {number} amount
+   * @returns {boolean} True if purchase successful
+   */
+  spend(amount) {
+    if (this.money >= amount) {
+      this.money -= amount;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Check if citizen can afford an expense
+   * @param {number} amount
+   * @returns {boolean}
+   */
+  canAfford(amount) {
+    return this.money >= amount;
+  }
+
+  /**
    * Returns an HTML representation of this object
    * @returns {string}
    */
@@ -369,6 +424,8 @@ export class Citizen {
       activityEmoji = emojiMap[this.currentActivity] || '📍';
     }
 
+    const moneyColor = this.money < 0 ? '#ff4444' : this.money < 500 ? '#ffaa00' : '#4CAF50';
+
     return `
       <li class="info-citizen">
         <span class="info-citizen-name">${this.name}</span>
@@ -383,6 +440,10 @@ export class Citizen {
             ${professionDisplay}
           </span>
         </span>
+        <div style="margin-top: 5px; font-size: 0.85em;">
+          <span style="color: ${moneyColor};">💰 $${this.money.toFixed(0)}</span>
+          ${this.rent > 0 ? ` | Rent: $${this.rent}/mo` : ''}
+        </div>
         <div style="margin-top: 5px; font-size: 0.85em; color: #aaffaa;">
           ${activityEmoji} ${activityDisplay}
         </div>
