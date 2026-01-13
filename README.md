@@ -23,6 +23,7 @@ Comprehensive documentation is available in the [`/docs`](docs/) folder:
 - **[Development](docs/development/)** - Contributing and development guides
   - [Contributing Guide](docs/development/CONTRIBUTING.md) - How to contribute
   - [AI-Assisted Development](docs/development/AI_ASSISTED_DEV.md) - AI development practices
+  - [Resolved Issues](docs/development/RESOLVED_ISSUES.md) - Historical issues and fixes
 - **[Architecture](docs/architecture/)** - Technical architecture
   - [Services](docs/architecture/services.md) - Service pattern
   - [Rendering](docs/architecture/rendering.md) - Three.js rendering system

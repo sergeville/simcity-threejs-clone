@@ -15,6 +15,7 @@ This repository contains comprehensive documentation organized by topic:
   - [Contributing](development/CONTRIBUTING.md) - Contribution guidelines
   - [AI-Assisted Development](development/AI_ASSISTED_DEV.md) - How this project uses AI
   - [Testing Checklist](development/TESTING_CHECKLIST.md) - Comprehensive testing guide
+  - [Resolved Issues](development/RESOLVED_ISSUES.md) - Historical issues and fixes
 - [Architecture](architecture/) - Technical architecture docs
   - [Services](architecture/services.md) - Service pattern documentation
   - [Rendering](architecture/rendering.md) - Three.js rendering system
