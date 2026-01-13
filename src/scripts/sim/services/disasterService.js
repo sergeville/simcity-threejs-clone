@@ -34,8 +34,57 @@ export class DisasterService extends SimService {
    */
   enabled = true;
 
+  /**
+   * Disaster difficulty level
+   * 0 = None (disabled)
+   * 1 = Easy (low frequency, low damage)
+   * 2 = Normal (default)
+   * 3 = Hard (high frequency, high damage)
+   * @type {number}
+   */
+  difficulty = 2;
+
   constructor() {
     super();
+  }
+
+  /**
+   * Set disaster difficulty
+   * @param {number} level - 0 (None), 1 (Easy), 2 (Normal), 3 (Hard)
+   */
+  setDifficulty(level) {
+    this.difficulty = Math.max(0, Math.min(3, level));
+
+    // Adjust parameters based on difficulty
+    switch (this.difficulty) {
+      case 0: // None
+        this.enabled = false;
+        break;
+      case 1: // Easy
+        this.enabled = true;
+        this.disasterChance = 0.02; // 2% chance
+        this.#checkInterval = 150; // Less frequent checks
+        break;
+      case 2: // Normal
+        this.enabled = true;
+        this.disasterChance = 0.05; // 5% chance
+        this.#checkInterval = 100;
+        break;
+      case 3: // Hard
+        this.enabled = true;
+        this.disasterChance = 0.10; // 10% chance
+        this.#checkInterval = 75; // More frequent checks
+        break;
+    }
+  }
+
+  /**
+   * Get difficulty name
+   * @returns {string}
+   */
+  getDifficultyName() {
+    const names = ['None', 'Easy', 'Normal', 'Hard'];
+    return names[this.difficulty] || 'Normal';
   }
 
   /**
@@ -246,14 +295,29 @@ class Fire {
     if (tile?.building) {
       delete tile.building.onFire;
 
-      // 30% chance building is destroyed
-      if (Math.random() < 0.3) {
-        city.bulldoze(this.x, this.y);
+      // Determine damage based on fire duration
+      const damageRoll = Math.random();
 
+      if (damageRoll < 0.15) {
+        // 15% chance - complete destruction
+        city.bulldoze(this.x, this.y);
         if (window.activityFeed) {
           window.activityFeed.event(`💥 Building at (${this.x}, ${this.y}) destroyed by fire!`, '💥');
         }
+      } else if (damageRoll < 0.35) {
+        // 20% chance - heavy damage
+        tile.building.damageState = 3;
+        if (window.activityFeed) {
+          window.activityFeed.event(`Building at (${this.x}, ${this.y}) heavily damaged by fire`, '🔥');
+        }
+      } else if (damageRoll < 0.60) {
+        // 25% chance - moderate damage
+        tile.building.damageState = 2;
+      } else if (damageRoll < 0.85) {
+        // 25% chance - light damage
+        tile.building.damageState = 1;
       }
+      // 15% chance - no damage
     }
   }
 }
@@ -296,14 +360,28 @@ class Flood {
   }
 
   cleanup(city) {
-    // Flood cleanup - small chance to destroy buildings
+    // Flood cleanup - damage buildings in affected area
     for (let dx = -this.radius; dx <= this.radius; dx++) {
       for (let dy = -this.radius; dy <= this.radius; dy++) {
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist <= this.radius && Math.random() < 0.1) {
+        if (dist <= this.radius) {
           const tile = city.getTile(this.x + dx, this.y + dy);
           if (tile?.building) {
-            city.bulldoze(this.x + dx, this.y + dy);
+            const damageRoll = Math.random();
+
+            if (damageRoll < 0.05) {
+              // 5% chance - complete destruction
+              city.bulldoze(this.x + dx, this.y + dy);
+            } else if (damageRoll < 0.15) {
+              // 10% chance - heavy damage
+              tile.building.damageState = Math.max(tile.building.damageState, 3);
+            } else if (damageRoll < 0.30) {
+              // 15% chance - moderate damage
+              tile.building.damageState = Math.max(tile.building.damageState, 2);
+            } else if (damageRoll < 0.50) {
+              // 20% chance - light damage
+              tile.building.damageState = Math.max(tile.building.damageState, 1);
+            }
           }
         }
       }

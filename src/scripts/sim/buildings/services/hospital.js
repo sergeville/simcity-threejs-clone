@@ -40,9 +40,41 @@ export class Hospital extends ServiceBuilding {
     }
   }
 
+  /**
+   * Repair damaged buildings in range
+   * @param {City} city
+   */
+  repairBuildings(city) {
+    if (this.effectiveness < 50) return; // Need at least 50% effectiveness to repair
+
+    // Repair damaged buildings in range
+    for (let dx = -this.serviceRadius; dx <= this.serviceRadius; dx++) {
+      for (let dy = -this.serviceRadius; dy <= this.serviceRadius; dy++) {
+        const tile = city.getTile(this.x + dx, this.y + dy);
+        if (tile?.building && tile.building.damageState > 0) {
+          // Repair chance scaled by effectiveness (5% base chance at 100% effectiveness)
+          const repairChance = (this.effectiveness / 100) * 0.05;
+
+          if (Math.random() < repairChance) {
+            tile.building.damageState--;
+
+            // Notify when building is fully repaired
+            if (tile.building.damageState === 0 && window.activityFeed) {
+              window.activityFeed.event(
+                `🏥 Building at (${this.x + dx}, ${this.y + dy}) fully repaired`,
+                '✅'
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+
   simulate(city) {
     super.simulate(city);
     this.provideHealthcare(city);
+    this.repairBuildings(city);
   }
 
   toHTML() {

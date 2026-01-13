@@ -33,6 +33,11 @@ export class Building extends SimObject {
    * @type {Sprite}
    */
   #statusIcon = new THREE.Sprite();
+  /**
+   * Damage state (0 = none, 1 = light, 2 = moderate, 3 = heavy)
+   * @type {number}
+   */
+  damageState = 0;
 
   constructor() {
     super();

@@ -335,3 +335,30 @@ h1 {
 #activity-feed::-webkit-scrollbar-thumb:hover {
   background: #4a9eff60;
 }
+
+/* Citizen Stats Panel */
+#citizen-stats-panel {
+  background-color: #00000070;
+  border-radius: 8px;
+  padding: 12px;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.citizen-stats-header {
+  font-weight: bold;
+  font-size: 1em;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid #4a9eff;
+  color: #ffffff;
+}
+
+#citizen-stats-content {
+  color: #ffffff;
+  font-size: 0.9em;
+  line-height: 1.6em;
+}
+
+#citizen-stats-content div {
+  margin: 4px 0;
+}

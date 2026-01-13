@@ -7,6 +7,7 @@ import { PowerService } from './services/power.js';
 import { EconomyService } from './services/economy.js';
 import { CitizenManager } from './services/citizenManager.js';
 import { DisasterService } from './services/disasterService.js';
+import { VisualEffectsService } from './services/visualEffectsService.js';
 import { SimService } from './services/simService.js';
 import { TerrainGenerator } from './terrainGenerator.js';
 import { TimeManager } from './timeManager.js';
@@ -87,6 +88,11 @@ export class City extends THREE.Group {
     const citizenManager = new CitizenManager();
     this.services.push(citizenManager);
     this.root.add(citizenManager.citizenGroup);
+
+    // Create visual effects service
+    const visualEffects = new VisualEffectsService();
+    this.services.push(visualEffects);
+    this.root.add(visualEffects.effectsGroup);
 
     this.vehicleGraph = new VehicleGraph(this.size);
     this.debugMeshes.add(this.vehicleGraph);
@@ -239,7 +245,7 @@ export class City extends THREE.Group {
 
   /**
    * Bulldozes the building at the specified coordinates
-   * @param {number} x 
+   * @param {number} x
    * @param {number} y
    */
   bulldoze(x, y) {
@@ -248,6 +254,12 @@ export class City extends THREE.Group {
     if (tile.building) {
       if (tile.building.type === BuildingType.road) {
         this.vehicleGraph.updateTile(x, y, null);
+      }
+
+      // Clean up any visual effects for this tile
+      const visualEffects = this.services.find(s => s instanceof VisualEffectsService);
+      if (visualEffects) {
+        visualEffects.removeEffectsForTile(x, y);
       }
 
       // Activity feed notification

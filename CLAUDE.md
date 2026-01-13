@@ -58,11 +58,40 @@ Zones have a **development lifecycle**:
 
 - **SimService** (`src/scripts/sim/services/simService.js`): Base class for city-wide services.
 - **PowerService** (`src/scripts/sim/services/power.js`): Manages electricity distribution across the city using a graph-based propagation algorithm.
+- **DisasterService** (`src/scripts/sim/services/disasterService.js`): Spawns and manages disasters (fires, floods, power outages) with configurable difficulty.
+- **VisualEffectsService** (`src/scripts/sim/services/visualEffectsService.js`): Creates and manages Three.js particle effects for fires, smoke, and damage overlays.
+- **Service Buildings** (`src/scripts/sim/buildings/services/`): Hospital, police station, fire station, and school provide area-of-effect benefits. Hospitals repair damaged buildings.
 
 ### Vehicle System
 
 - **VehicleGraph** (`src/scripts/sim/vehicles/vehicleGraph.js`): Maintains a navigation graph of roads. Spawns vehicles at intervals that travel along roads using A* pathfinding.
 - Vehicles fade in/out at spawn/despawn and have configurable speed, lifetime, and spawn intervals (see `config.js`).
+
+### Disaster System
+
+The game features a disaster system with three event types and visual effects:
+
+- **Fires**: Spread to adjacent buildings, damage citizens, create particle effects. Fire stations reduce fire duration.
+- **Floods**: Area-of-effect disaster affecting all buildings within a 5-tile radius. Damages citizens and buildings.
+- **Power Outages**: Temporarily disable power plants for 50 steps, cutting electricity to connected buildings.
+
+**Damage Model**:
+- Buildings track damage state (0-3): none, light, moderate, heavy
+- Damage accumulates from multiple disasters
+- Visual overlays show damage severity
+- Hospitals repair damaged buildings within their service radius (8 tiles)
+
+**Difficulty Levels**:
+- **None** (disabled), **Easy** (2% chance/150 steps), **Normal** (5% chance/100 steps), **Hard** (10% chance/75 steps)
+- UI button in toolbar cycles through levels
+- Configurable via `DisasterService.setDifficulty(level)`
+
+**Visual Effects**:
+- Fire: 20 orange particle emitters + 20 smoke particles + pulsing ground glow
+- Damage: Semi-transparent dark overlays scaled by damage state
+- Effects auto-cleanup when buildings are demolished
+
+See `DISASTER_SYSTEM.md` for complete documentation.
 
 ### Tile System
 

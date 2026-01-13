@@ -142,6 +142,51 @@ export class GameUI {
   }
 
   /**
+   * Toggle disaster difficulty (cycles through None -> Easy -> Normal -> Hard -> None)
+   */
+  toggleDisasterDifficulty() {
+    if (window.game && window.game.city) {
+      const disasterService = window.game.city.services.find(s => s.constructor.name === 'DisasterService');
+
+      if (disasterService) {
+        // Cycle through difficulty levels: 0 -> 1 -> 2 -> 3 -> 0
+        const nextDifficulty = (disasterService.difficulty + 1) % 4;
+        disasterService.setDifficulty(nextDifficulty);
+
+        const difficultyName = disasterService.getDifficultyName();
+
+        // Update button appearance
+        const button = document.getElementById('button-disaster-difficulty');
+        if (button) {
+          const difficultyEmojis = {
+            'None': '🛡️',
+            'Easy': '⚠️',
+            'Normal': '🔥',
+            'Hard': '💀'
+          };
+
+          const difficultyColors = {
+            'None': '#4CAF50',
+            'Easy': '#FFC107',
+            'Normal': '#FF9800',
+            'Hard': '#F44336'
+          };
+
+          button.querySelector('span').textContent = difficultyEmojis[difficultyName];
+          button.style.borderColor = difficultyColors[difficultyName];
+          button.querySelector('span').style.color = difficultyColors[difficultyName];
+          button.title = `Disasters: ${difficultyName}`;
+        }
+
+        // Show notification
+        if (window.activityFeed) {
+          window.activityFeed.event(`Disaster difficulty set to: ${difficultyName}`, '⚙️');
+        }
+      }
+    }
+  }
+
+  /**
    * Quit the city with confirmation
    */
   quitCity() {
