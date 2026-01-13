@@ -1,0 +1,120 @@
+name: Duplicate Issue Detection
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  issues: write
+
+jobs:
+  check-duplicates:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check for potential duplicates
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const issue = context.payload.issue;
+            const issueTitle = issue.title.toLowerCase();
+            const issueBody = (issue.body || '').toLowerCase();
+
+            // Get all issues
+            const allIssues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'all',
+              per_page: 100
+            });
+
+            // Keywords to check for similarity
+            function extractKeywords(text) {
+              // Remove common words
+              const stopWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'was', 'are', 'were', 'been', 'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they']);
+
+              return text
+                .replace(/[^\w\s]/g, ' ')
+                .split(/\s+/)
+                .filter(word => word.length > 3 && !stopWords.has(word));
+            }
+
+            // Calculate similarity score
+            function calculateSimilarity(keywords1, keywords2) {
+              const set1 = new Set(keywords1);
+              const set2 = new Set(keywords2);
+              const intersection = new Set([...set1].filter(x => set2.has(x)));
+              const union = new Set([...set1, ...set2]);
+
+              return intersection.size / union.size;
+            }
+
+            const currentKeywords = extractKeywords(issueTitle + ' ' + issueBody);
+            const potentialDuplicates = [];
+
+            // Check each existing issue for similarity
+            for (const existingIssue of allIssues.data) {
+              // Skip the current issue
+              if (existingIssue.number === issue.number) continue;
+
+              const existingTitle = existingIssue.title.toLowerCase();
+              const existingBody = (existingIssue.body || '').toLowerCase();
+              const existingKeywords = extractKeywords(existingTitle + ' ' + existingBody);
+
+              const similarity = calculateSimilarity(currentKeywords, existingKeywords);
+
+              // If similarity is high, add to potential duplicates
+              if (similarity > 0.3) {
+                potentialDuplicates.push({
+                  number: existingIssue.number,
+                  title: existingIssue.title,
+                  state: existingIssue.state,
+                  url: existingIssue.html_url,
+                  similarity: similarity
+                });
+              }
+            }
+
+            // Sort by similarity
+            potentialDuplicates.sort((a, b) => b.similarity - a.similarity);
+
+            // Comment if duplicates found
+            if (potentialDuplicates.length > 0) {
+              const top5 = potentialDuplicates.slice(0, 5);
+
+              let comment = '## 🔍 Potential Duplicate Issues Detected\n\n';
+              comment += 'Based on keyword analysis, this issue may be related to:\n\n';
+
+              for (const dup of top5) {
+                const matchPercent = Math.round(dup.similarity * 100);
+                const statusEmoji = dup.state === 'closed' ? '✅' : '🔴';
+                comment += `- ${statusEmoji} #${dup.number}: [${dup.title}](${dup.url}) (${matchPercent}% match)\n`;
+              }
+
+              comment += '\n---\n\n';
+              comment += '**Please check these issues before proceeding:**\n';
+              comment += '- If this is the same issue, consider closing this as duplicate\n';
+              comment += '- If closed issues match, check if the solution works for you\n';
+              comment += '- If different, please explain how this issue differs\n\n';
+              comment += '*This is an automated check. False positives may occur.*';
+
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                body: comment
+              });
+
+              // Add "potential-duplicate" label
+              await github.rest.issues.addLabels({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: issue.number,
+                labels: ['potential-duplicate']
+              });
+            } else {
+              // No duplicates found
+              console.log('No potential duplicates found');
+            }

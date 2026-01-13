@@ -1,0 +1,98 @@
+# GitHub Issue Labels Configuration
+# Use this as a reference for setting up consistent labels
+
+# Type Labels
+- name: bug
+  color: d73a4a
+  description: Something isn't working correctly
+
+- name: enhancement
+  color: a2eeef
+  description: New feature or improvement
+
+- name: documentation
+  color: 0075ca
+  description: Documentation improvements
+
+- name: question
+  color: d876e3
+  description: Questions about functionality
+
+# Priority Labels
+- name: critical
+  color: ff0000
+  description: Crashes, data loss, game unplayable
+
+- name: high
+  color: ff6600
+  description: Major features broken
+
+- name: medium
+  color: ffaa00
+  description: Feature partially broken
+
+- name: low
+  color: ffee00
+  description: Minor issues, polish
+
+# Component Labels
+- name: ui
+  color: 5319e7
+  description: User interface
+
+- name: simulation
+  color: 1d76db
+  description: Simulation logic
+
+- name: economy
+  color: 0e8a16
+  description: Budget/taxes/economy
+
+- name: graphics
+  color: fbca04
+  description: Rendering/visual
+
+- name: citizens
+  color: c5def5
+  description: Citizen AI/behavior
+
+- name: buildings
+  color: bfd4f2
+  description: Building system
+
+- name: services
+  color: d4c5f9
+  description: Hospital/police/fire/school
+
+- name: disasters
+  color: e99695
+  description: Fire/flood/outage system
+
+- name: save-load
+  color: f9d0c4
+  description: Save/load system
+
+# Status Labels
+- name: duplicate
+  color: cfd3d7
+  description: Already reported
+
+- name: potential-duplicate
+  color: e4e669
+  description: May be duplicate (automated detection)
+
+- name: wontfix
+  color: ffffff
+  description: Won't be fixed
+
+- name: help wanted
+  color: 008672
+  description: Community help needed
+
+- name: good first issue
+  color: 7057ff
+  description: Beginner-friendly
+
+- name: in progress
+  color: yellow
+  description: Being worked on

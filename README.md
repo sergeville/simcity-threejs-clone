@@ -22,8 +22,9 @@ Comprehensive documentation is available in the [`/docs`](docs/) folder:
   - [Disaster System](docs/features/disasters.md) - Fires, floods, and emergencies
 - **[Development](docs/development/)** - Contributing and development guides
   - [Contributing Guide](docs/development/CONTRIBUTING.md) - How to contribute
-  - [AI-Assisted Development](docs/development/AI_ASSISTED_DEV.md) - AI development practices
+  - [GitHub Issues Guide](docs/development/GITHUB_ISSUES_GUIDE.md) - Report bugs and request features
   - [Resolved Issues](docs/development/RESOLVED_ISSUES.md) - Historical issues and fixes
+  - [AI-Assisted Development](docs/development/AI_ASSISTED_DEV.md) - AI development practices
 - **[Architecture](docs/architecture/)** - Technical architecture
   - [Services](docs/architecture/services.md) - Service pattern
   - [Rendering](docs/architecture/rendering.md) - Three.js rendering system

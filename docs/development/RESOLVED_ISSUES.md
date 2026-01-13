@@ -2,6 +2,21 @@
 
 This document tracks technical issues encountered during development and their resolutions. Use this as a reference when troubleshooting similar problems.
 
+## How to Use This Document
+
+**Before reporting a bug:**
+1. Search this document for similar symptoms
+2. Try the documented solution
+3. If the solution doesn't work, [create a GitHub Issue](https://github.com/sergeville/simcity-threejs-clone/issues/new/choose)
+4. Reference this document in your issue
+
+**For contributors:**
+When you fix a bug, add it here using the template at the bottom.
+
+**See Also:**
+- [GitHub Issues Guide](GITHUB_ISSUES_GUIDE.md) - How to report bugs and request features
+- [Contributing Guide](CONTRIBUTING.md) - How to contribute fixes
+
 ## Table of Contents
 - [GitHub Actions & Deployment](#github-actions--deployment)
 - [Game Systems](#game-systems)

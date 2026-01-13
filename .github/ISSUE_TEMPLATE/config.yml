@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 💬 Discussions
+    url: https://github.com/sergeville/simcity-threejs-clone/discussions
+    about: Ask questions, share ideas, or discuss features with the community
+  - name: 📚 Documentation
+    url: https://github.com/sergeville/simcity-threejs-clone/blob/main/docs/README.md
+    about: Check comprehensive documentation before reporting
+  - name: 🔧 Resolved Issues
+    url: https://github.com/sergeville/simcity-threejs-clone/blob/main/docs/development/RESOLVED_ISSUES.md
+    about: Check if your issue has already been resolved
