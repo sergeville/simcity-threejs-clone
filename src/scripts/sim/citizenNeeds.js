@@ -179,4 +179,28 @@ export class CitizenNeeds {
       <br>
     `;
   }
+
+  /**
+   * Serialize needs state
+   * @returns {Object}
+   */
+  serialize() {
+    return {
+      health: this.health,
+      safety: this.safety,
+      education: this.education,
+      happiness: this.happiness
+    };
+  }
+
+  /**
+   * Deserialize needs state
+   * @param {Object} data
+   */
+  deserialize(data) {
+    this.health = data.health;
+    this.safety = data.safety;
+    this.education = data.education;
+    this.happiness = data.happiness;
+  }
 }

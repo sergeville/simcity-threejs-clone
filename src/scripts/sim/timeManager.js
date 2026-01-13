@@ -172,4 +172,38 @@ export class TimeManager {
   normalSpeed() {
     this.tickInterval = 1000;
   }
+
+  /**
+   * Serialize time manager state
+   * @returns {Object}
+   */
+  serialize() {
+    return {
+      currentHour: this.currentHour,
+      currentDay: this.currentDay,
+      currentTick: this.currentTick,
+      totalTicks: this.totalTicks,
+      ticksPerHour: this.ticksPerHour,
+      tickInterval: this.tickInterval,
+      deltaAccumulator: this.deltaAccumulator
+    };
+  }
+
+  /**
+   * Deserialize time manager state
+   * @param {Object} data
+   */
+  deserialize(data) {
+    this.currentHour = data.currentHour;
+    this.currentDay = data.currentDay;
+    this.currentTick = data.currentTick;
+    this.totalTicks = data.totalTicks;
+    this.ticksPerHour = data.ticksPerHour;
+    this.tickInterval = data.tickInterval;
+    this.deltaAccumulator = data.deltaAccumulator || 0;
+
+    // Reset runtime state
+    this.lastTickTime = Date.now();
+    this.isPaused = false;
+  }
 }

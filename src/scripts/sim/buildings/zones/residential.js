@@ -41,6 +41,18 @@ export class ResidentialZone extends Zone {
     html += this.residents.toHTML();
     return html;
   }
+
+  /**
+   * Serialize residential zone state
+   * @returns {Object}
+   */
+  serialize() {
+    const data = super.serialize();
+    data.name = this.name;
+    // Store only citizen IDs to avoid circular references
+    data.residents = this.residents.getResidents().map(c => c.id);
+    return data;
+  }
 }
 
 // Arrays of different name components

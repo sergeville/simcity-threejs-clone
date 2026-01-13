@@ -211,6 +211,50 @@ export class DisasterService extends SimService {
       }
     }
   }
+
+  /**
+   * Serialize disaster service state
+   * @returns {Object}
+   */
+  serialize() {
+    return {
+      difficulty: this.difficulty,
+      enabled: this.enabled,
+      disasterChance: this.disasterChance,
+      activeDisasters: this.activeDisasters.map(d => d.serialize())
+    };
+  }
+
+  /**
+   * Deserialize disaster service state
+   * @param {Object} data
+   * @param {City} city
+   */
+  deserialize(data, city) {
+    this.setDifficulty(data.difficulty);
+    this.enabled = data.enabled;
+    this.disasterChance = data.disasterChance;
+
+    // Restore active disasters
+    this.activeDisasters = [];
+    for (const disasterData of data.activeDisasters || []) {
+      let disaster;
+      switch (disasterData.type) {
+        case 'fire':
+          disaster = Fire.deserialize(disasterData, city);
+          break;
+        case 'flood':
+          disaster = Flood.deserialize(disasterData);
+          break;
+        case 'power-outage':
+          disaster = PowerOutage.deserialize(disasterData);
+          break;
+      }
+      if (disaster) {
+        this.activeDisasters.push(disaster);
+      }
+    }
+  }
 }
 
 /**
@@ -320,6 +364,25 @@ class Fire {
       // 15% chance - no damage
     }
   }
+
+  serialize() {
+    return {
+      type: 'fire',
+      x: this.x,
+      y: this.y,
+      duration: this.duration,
+      spreadChance: this.spreadChance,
+      hasSpread: this.hasSpread
+    };
+  }
+
+  static deserialize(data, city) {
+    const fire = new Fire(data.x, data.y, city);
+    fire.duration = data.duration;
+    fire.spreadChance = data.spreadChance;
+    fire.hasSpread = data.hasSpread;
+    return fire;
+  }
 }
 
 /**
@@ -387,6 +450,22 @@ class Flood {
       }
     }
   }
+
+  serialize() {
+    return {
+      type: 'flood',
+      x: this.x,
+      y: this.y,
+      radius: this.radius,
+      duration: this.duration
+    };
+  }
+
+  static deserialize(data) {
+    const flood = new Flood(data.x, data.y, data.radius);
+    flood.duration = data.duration;
+    return flood;
+  }
 }
 
 /**
@@ -423,5 +502,19 @@ class PowerOutage {
         window.activityFeed.event(`⚡ Power restored at (${this.x}, ${this.y})`, '✅');
       }
     }
+  }
+
+  serialize() {
+    return {
+      type: 'power-outage',
+      x: this.x,
+      y: this.y,
+      duration: this.duration
+    };
+  }
+
+  static deserialize(data) {
+    const outage = new PowerOutage(data.x, data.y, data.duration);
+    return outage;
   }
 }

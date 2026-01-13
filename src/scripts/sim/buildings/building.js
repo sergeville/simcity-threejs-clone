@@ -112,7 +112,26 @@ export class Building extends SimObject {
         <span class="info-label">Power (kW)</span>
         <span class="info-value">${this.power.supplied}/${this.power.required}</span>
         <br>`;
-    } 
+    }
     return html;
+  }
+
+  /**
+   * Serialize building state
+   * @returns {Object}
+   */
+  serialize() {
+    return {
+      type: this.type,
+      damageState: this.damageState,
+      power: {
+        required: this.power.required,
+        supplied: this.power.supplied
+      },
+      roadAccess: {
+        value: this.roadAccess.value,
+        enabled: this.roadAccess.enabled
+      }
+    };
   }
 }

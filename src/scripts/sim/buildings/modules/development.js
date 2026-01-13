@@ -75,6 +75,22 @@ export class DevelopmentModule extends SimModule {
     this.#zone.refreshView();
   }
 
+  get constructionCounter() {
+    return this.#constructionCounter;
+  }
+
+  set constructionCounter(value) {
+    this.#constructionCounter = value;
+  }
+
+  get abandonmentCounter() {
+    return this.#abandonmentCounter;
+  }
+
+  set abandonmentCounter(value) {
+    this.#abandonmentCounter = value;
+  }
+
   /**
    * @param {City} city 
    */

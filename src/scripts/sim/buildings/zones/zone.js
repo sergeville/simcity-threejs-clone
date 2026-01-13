@@ -67,4 +67,21 @@ export class Zone extends Building {
     html += this.development.toHTML();
     return html;
   }
+
+  /**
+   * Serialize zone state
+   * @returns {Object}
+   */
+  serialize() {
+    const data = super.serialize();
+    data.style = this.style;
+    data.rotation = this.rotation.y;
+    data.development = {
+      state: this.development.state,
+      level: this.development.level,
+      constructionCounter: this.development.constructionCounter,
+      abandonmentCounter: this.development.abandonmentCounter
+    };
+    return data;
+  }
 }

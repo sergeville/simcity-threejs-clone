@@ -453,6 +453,83 @@ export class Citizen {
       </li>
     `;
   }
+
+  /**
+   * Serialize citizen state
+   * @returns {Object}
+   */
+  serialize() {
+    return {
+      id: this.id,
+      name: this.name,
+      age: this.age,
+      state: this.state,
+      stateCounter: this.stateCounter,
+      residenceId: `${this.residence.x},${this.residence.y}`,
+      workplaceId: this.workplace ? `${this.workplace.x},${this.workplace.y}` : null,
+      professionName: this.profession?.name || null,
+      salary: this.salary,
+      money: this.money,
+      rent: this.rent,
+      currentActivity: this.currentActivity,
+      position: { x: this.position.x, y: this.position.y },
+      targetPosition: { x: this.targetPosition.x, y: this.targetPosition.y },
+      movementProgress: this.movementProgress,
+      needs: this.needs.serialize()
+    };
+  }
+
+  /**
+   * Deserialize citizen from saved data
+   * @param {Object} data - Serialized citizen data
+   * @param {City} city - City instance
+   * @returns {Citizen|null}
+   */
+  static deserialize(data, city) {
+    // Parse residence coordinates
+    const [resX, resY] = data.residenceId.split(',').map(Number);
+    const residence = city.getTile(resX, resY)?.building;
+
+    if (!residence || residence.type !== 'residential') {
+      console.warn(`Residence not found for citizen ${data.id} at (${resX}, ${resY})`);
+      return null;
+    }
+
+    // Create citizen with residence
+    const citizen = new Citizen(residence);
+
+    // Restore identity and state
+    citizen.id = data.id;
+    citizen.name = data.name;
+    citizen.age = data.age;
+    citizen.state = data.state;
+    citizen.stateCounter = data.stateCounter;
+
+    // Restore economic data
+    citizen.salary = data.salary;
+    citizen.money = data.money;
+    citizen.rent = data.rent;
+
+    // Restore activity and position
+    citizen.currentActivity = data.currentActivity;
+    citizen.position = data.position;
+    citizen.targetPosition = data.targetPosition;
+    citizen.movementProgress = data.movementProgress;
+
+    // Restore needs
+    if (data.needs) {
+      citizen.needs.deserialize(data.needs);
+    }
+
+    // Store workplaceId temporarily for linking later
+    citizen._workplaceId = data.workplaceId;
+    citizen._professionName = data.professionName;
+
+    // Note: Workplace and profession will be restored in City.deserialize
+    // after all buildings and citizens are created
+
+    return citizen;
+  }
 }
 
 function generateRandomName() {

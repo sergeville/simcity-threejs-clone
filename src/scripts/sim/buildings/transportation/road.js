@@ -95,4 +95,15 @@ export class Road extends Building {
     `;
     return html;
   }
+
+  /**
+   * Serialize road state
+   * @returns {Object}
+   */
+  serialize() {
+    const data = super.serialize();
+    data.style = this.style;
+    data.rotation = this.rotation.y;
+    return data;
+  }
 }

@@ -41,6 +41,18 @@ export class IndustrialZone extends Zone {
     html += this.jobs.toHTML();
     return html;
   }
+
+  /**
+   * Serialize industrial zone state
+   * @returns {Object}
+   */
+  serialize() {
+    const data = super.serialize();
+    data.name = this.name;
+    // Store only citizen IDs to avoid circular references
+    data.workers = this.jobs.workers.map(c => c.id);
+    return data;
+  }
 }
 
 // Arrays of words for generating business names

@@ -59,6 +59,11 @@ export class GameUI {
     if (this.isPaused) {
       document.getElementById('pause-button-icon').src = playIconUrl;
       document.getElementById('paused-text').style.visibility = 'visible';
+
+      // Auto-save when pausing
+      if (window.game && window.game.saveGame) {
+        window.game.saveGame();
+      }
     } else {
       document.getElementById('pause-button-icon').src = pauseIconUrl;
       document.getElementById('paused-text').style.visibility = 'hidden';

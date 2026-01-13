@@ -45,6 +45,14 @@ export class EconomyService extends SimService {
     super();
   }
 
+  get stepCounter() {
+    return this.#stepCounter;
+  }
+
+  set stepCounter(value) {
+    this.#stepCounter = value;
+  }
+
   /**
    * Simulate one step of the economy
    * @param {City} city
@@ -286,5 +294,31 @@ export class EconomyService extends SimService {
    */
   get netRevenue() {
     return this.monthlyIncome - this.monthlyExpenses;
+  }
+
+  /**
+   * Serialize economy service state
+   * @returns {Object}
+   */
+  serialize() {
+    return {
+      funds: this.funds,
+      monthlyIncome: this.monthlyIncome,
+      monthlyExpenses: this.monthlyExpenses,
+      stepCounter: this.stepCounter,
+      isBankrupt: this.isBankrupt
+    };
+  }
+
+  /**
+   * Deserialize economy service state
+   * @param {Object} data
+   */
+  deserialize(data) {
+    this.funds = data.funds;
+    this.monthlyIncome = data.monthlyIncome;
+    this.monthlyExpenses = data.monthlyExpenses;
+    this.stepCounter = data.stepCounter;
+    this.isBankrupt = data.isBankrupt;
   }
 }

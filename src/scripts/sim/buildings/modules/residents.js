@@ -44,6 +44,22 @@ export class ResidentsModule extends SimModule {
   }
 
   /**
+   * Add a single resident to the building
+   * @param {Citizen} citizen
+   */
+  addResident(citizen) {
+    this.#residents.push(citizen);
+  }
+
+  /**
+   * Set the residents array (for deserialization)
+   * @param {Citizen[]} residents
+   */
+  setResidents(residents) {
+    this.#residents = residents;
+  }
+
+  /**
    * Maximuim number of residents that can live in this building
    * @returns {number}
    */

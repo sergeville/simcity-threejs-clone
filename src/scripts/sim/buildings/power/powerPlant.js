@@ -61,4 +61,16 @@ export class PowerPlant extends Building {
     `;
     return html;
   }
+
+  /**
+   * Serialize power plant state
+   * @returns {Object}
+   */
+  serialize() {
+    const data = super.serialize();
+    data.powerCapacity = this.powerCapacity;
+    data.powerConsumed = this.powerConsumed;
+    data.disabled = this.disabled || false;
+    return data;
+  }
 }

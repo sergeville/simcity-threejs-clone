@@ -5,6 +5,7 @@ import { InputManager } from './input.js';
 import { City } from './sim/city.js';
 import { SimObject } from './sim/simObject.js';
 import { AIAgent } from './ai/aiAgent.js';
+import { SaveManager } from './saveManager.js';
 
 /** 
  * Manager for the Three.js scene. Handles rendering of a `City` object
@@ -64,15 +65,41 @@ export class Game {
     window.assetManager = new AssetManager(() => {
       window.ui.hideLoadingText();
 
-      this.city = new City(128); // 128x128 MASSIVE map - 16,384 tiles!
+      // Try to load saved game
+      const saveData = SaveManager.load();
+
+      if (saveData) {
+        try {
+          console.log('Loading saved game...');
+          this.city = City.deserialize(saveData);
+
+          if (window.activityFeed) {
+            window.activityFeed.info('Game loaded successfully!', '💾');
+            window.activityFeed.info(`Welcome back, Mayor! City: ${this.city.name}`, '🏙️');
+          }
+        } catch (error) {
+          console.error('Failed to load saved game:', error);
+          this.city = new City(128); // Fallback to new city
+
+          if (window.activityFeed) {
+            window.activityFeed.info('Could not load saved game. Starting new city...', '⚠️');
+          }
+        }
+      } else {
+        this.city = new City(128); // 128x128 MASSIVE map - 16,384 tiles!
+
+        // Welcome message to activity feed
+        if (window.activityFeed) {
+          window.activityFeed.info('Welcome, Mayor! Your city awaits.', '🏙️');
+          window.activityFeed.info(`Map generated: ${this.city.size}x${this.city.size} (${this.city.size * this.city.size} tiles)`, '🗺️');
+        }
+      }
+
       this.initialize(this.city);
       this.start();
 
-      // Welcome message to activity feed
-      if (window.activityFeed) {
-        window.activityFeed.info('Welcome, Mayor! Your city awaits.', '🏙️');
-        window.activityFeed.info(`Map generated: ${this.city.size}x${this.city.size} (${this.city.size * this.city.size} tiles)`, '🗺️');
-      }
+      // Setup auto-save triggers
+      this.#setupAutoSave();
 
       setInterval(this.simulate.bind(this), 1000);
     });
@@ -279,6 +306,43 @@ export class Game {
   onResize() {
     this.cameraManager.resize(window.ui.gameWindow);
     this.renderer.setSize(window.ui.gameWindow.clientWidth, window.ui.gameWindow.clientHeight);
+  }
+
+  /**
+   * Save the current game state to localStorage
+   */
+  saveGame() {
+    if (!this.city) {
+      console.warn('Cannot save: No city loaded');
+      return false;
+    }
+
+    const success = SaveManager.save(this.city);
+
+    if (success && window.activityFeed) {
+      window.activityFeed.info('Game saved', '💾');
+    }
+
+    return success;
+  }
+
+  /**
+   * Setup auto-save triggers
+   */
+  #setupAutoSave() {
+    // Save before window closes
+    window.addEventListener('beforeunload', () => {
+      console.log('Auto-saving before exit...');
+      this.saveGame();
+    });
+
+    // Periodic auto-save every 60 seconds (if not paused)
+    setInterval(() => {
+      if (!window.ui.isPaused && this.city) {
+        console.log('Auto-saving...');
+        this.saveGame();
+      }
+    }, 60000);
   }
 }
 
