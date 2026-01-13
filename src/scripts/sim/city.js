@@ -198,7 +198,11 @@ export class City extends THREE.Group {
           'industrial': 'Industrial Zone',
           'road': 'Road',
           'power-plant': 'Power Plant',
-          'power-line': 'Power Line'
+          'power-line': 'Power Line',
+          'hospital': 'Hospital 🏥',
+          'police-station': 'Police Station 👮',
+          'fire-station': 'Fire Station 🚒',
+          'school': 'School 🏫'
         };
         const name = buildingNames[buildingType] || buildingType;
         window.activityFeed.construction(`Built ${name} at (${x}, ${y})`);

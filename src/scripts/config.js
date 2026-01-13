@@ -10,6 +10,10 @@ export default {
       road: 100,
       'power-plant': 5000,
       'power-line': 50,
+      hospital: 8000,
+      'police-station': 6000,
+      'fire-station': 7000,
+      school: 5000,
     },
     // Monthly maintenance costs for each building type
     maintenanceCosts: {
@@ -19,6 +23,10 @@ export default {
       road: 1,
       'power-plant': 100,
       'power-line': 5,
+      hospital: 200,
+      'police-station': 150,
+      'fire-station': 175,
+      school: 125,
     },
     // Tax rates (collected monthly)
     taxRates: {

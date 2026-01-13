@@ -4,5 +4,9 @@ export const BuildingType = {
   industrial: 'industrial',
   road: 'road',
   powerPlant: 'power-plant',
-  powerLine: 'power-line'
+  powerLine: 'power-line',
+  hospital: 'hospital',
+  policeStation: 'police-station',
+  fireStation: 'fire-station',
+  school: 'school'
 }
