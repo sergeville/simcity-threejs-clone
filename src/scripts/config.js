@@ -17,22 +17,22 @@ export default {
     },
     // Monthly maintenance costs for each building type
     maintenanceCosts: {
-      residential: 5,
-      commercial: 10,
-      industrial: 15,
-      road: 1,
-      'power-plant': 100,
-      'power-line': 5,
-      hospital: 200,
-      'police-station': 150,
-      'fire-station': 175,
-      school: 125,
+      residential: 2,
+      commercial: 5,
+      industrial: 8,
+      road: 0.5,
+      'power-plant': 50,
+      'power-line': 2,
+      hospital: 75,
+      'police-station': 60,
+      'fire-station': 70,
+      school: 50,
     },
     // Tax rates (collected monthly)
     taxRates: {
-      residential: 10,  // per resident per month
-      commercial: 25,   // per worker per month
-      industrial: 20    // per worker per month
+      residential: 15,  // per resident per month
+      commercial: 35,   // per worker per month
+      industrial: 30    // per worker per month
     }
   },
   modules: {
