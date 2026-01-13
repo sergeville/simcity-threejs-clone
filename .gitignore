@@ -35,9 +35,9 @@ DOCUMENTATION_RESTRUCTURE_PLAN.md
 !src/public/**/*.png
 !src/public/**/*.jpg
 
-# Local scripts and development tools
+# Local shell scripts (exclude development helper scripts in scripts/)
 *.sh
-/scripts/
+!scripts/*.sh
 
 # Development logs
 logs/
