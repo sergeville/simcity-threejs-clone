@@ -6,6 +6,7 @@
   <link rel="stylesheet" href="/main.css">
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <script type="module" src="./scripts/activityFeed.js"></script>
+  <script type="module" src="./scripts/newsPanel.js"></script>
   <script type="module" src="./scripts/game.js"></script>
   <script type="module" src="./scripts/ui.js"></script>
 </head>
@@ -127,6 +128,15 @@
         <div style="font-size: 11px; margin-top: 5px; color: #aaa;">Press ESC to stop</div>
       </div>
       <div id="activity-feed"></div>
+      <div id="news-panel">
+        <div class="news-header">
+          <span class="news-title">📰 City News</span>
+          <button class="news-toggle">−</button>
+        </div>
+        <div class="news-content">
+          <!-- Stories rendered here -->
+        </div>
+      </div>
     </div>
   </div>
 </body>

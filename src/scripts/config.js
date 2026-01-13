@@ -84,4 +84,18 @@ export default {
     // How often vehicles are spawned in milliseconds
     spawnInterval: 1000
   },
+  news: {
+    // How often monthly reports generate (in simulation steps)
+    monthlyReportInterval: 30,
+    // Maximum stories to keep in memory
+    maxStories: 20,
+    // Population milestones that trigger stories
+    populationMilestones: [100, 250, 500, 1000, 2500, 5000],
+    // Budget milestones that trigger stories (in dollars)
+    budgetMilestones: [100000, 250000, 500000, 1000000],
+    // Probability of generating citizen spotlight on monthly report
+    citizenSpotlightChance: 0.5,
+    // Minimum steps between service reports
+    serviceReportCooldown: 90
+  },
 }
