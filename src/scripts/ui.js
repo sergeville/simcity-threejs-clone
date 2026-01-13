@@ -71,6 +71,29 @@ export class GameUI {
   }
 
   /**
+   * Manually save the game
+   */
+  saveGame() {
+    if (window.game && window.game.saveGame) {
+      const success = window.game.saveGame();
+
+      if (success) {
+        // Provide visual feedback
+        const button = document.getElementById('button-save');
+        if (button) {
+          // Flash the button
+          button.style.backgroundColor = '#4CAF50';
+          setTimeout(() => {
+            button.style.backgroundColor = '';
+          }, 200);
+        }
+      }
+    } else {
+      console.warn('Cannot save: Game not initialized');
+    }
+  }
+
+  /**
    * Updates the values in the title bar
    * @param {Game} game
    */
