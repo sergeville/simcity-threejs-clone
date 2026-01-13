@@ -275,15 +275,20 @@ For even faster access, you can create shell aliases to run sim.sh commands from
    nano ~/.bash_profile
    ```
 
-2. **Add the following aliases** (replace `USERNAME` with your actual username):
+2. **Add the following aliases** (replace `[project-path]` with your actual project location):
    ```bash
    # SimCity Project Management Aliases
-   alias simStart='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh start)'
-   alias simStop='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh stop)'
-   alias simRestart='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh restart)'
-   alias simStatus='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh status)'
-   alias simClean='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh clean)'
-   alias simLogs='tail -f /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone/logs/sim.log'
+   alias simStart='(cd [project-path]/simcity-threejs-clone && ./scripts/sim.sh start)'
+   alias simStop='(cd [project-path]/simcity-threejs-clone && ./scripts/sim.sh stop)'
+   alias simRestart='(cd [project-path]/simcity-threejs-clone && ./scripts/sim.sh restart)'
+   alias simStatus='(cd [project-path]/simcity-threejs-clone && ./scripts/sim.sh status)'
+   alias simClean='(cd [project-path]/simcity-threejs-clone && ./scripts/sim.sh clean)'
+   alias simLogs='tail -f [project-path]/simcity-threejs-clone/logs/sim.log'
+   ```
+
+   **Example:** If your project is at `/Users/john/Documents/simcity-threejs-clone`, use:
+   ```bash
+   alias simStart='(cd /Users/john/Documents/simcity-threejs-clone && ./scripts/sim.sh start)'
    ```
 
 3. **Reload your shell configuration:**
@@ -300,15 +305,20 @@ For even faster access, you can create shell aliases to run sim.sh commands from
    nano ~/.zshrc
    ```
 
-2. **Add the same aliases** (replace `USERNAME` with your actual username):
+2. **Add the same aliases** (replace `[project-path]` with your actual project location):
    ```bash
    # SimCity Project Management Aliases
-   alias simStart='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh start)'
-   alias simStop='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh stop)'
-   alias simRestart='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh restart)'
-   alias simStatus='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh status)'
-   alias simClean='(cd /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone && ./scripts/sim.sh clean)'
-   alias simLogs='tail -f /Users/USERNAME/Documents/MyExperiments/simcity-threejs-clone/logs/sim.log'
+   alias simStart='(cd [project-path]/simcity-threejs-clone && ./scripts/sim.sh start)'
+   alias simStop='(cd [project-path]/simcity-threejs-clone && ./scripts/sim.sh stop)'
+   alias simRestart='(cd [project-path]/simcity-threejs-clone && ./scripts/sim.sh restart)'
+   alias simStatus='(cd [project-path]/simcity-threejs-clone && ./scripts/sim.sh status)'
+   alias simClean='(cd [project-path]/simcity-threejs-clone && ./scripts/sim.sh clean)'
+   alias simLogs='tail -f [project-path]/simcity-threejs-clone/logs/sim.log'
+   ```
+
+   **Example:** If your project is at `/Users/john/Documents/simcity-threejs-clone`, use:
+   ```bash
+   alias simStart='(cd /Users/john/Documents/simcity-threejs-clone && ./scripts/sim.sh start)'
    ```
 
 3. **Reload your shell configuration:**
