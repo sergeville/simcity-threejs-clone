@@ -376,6 +376,316 @@ SimCity service (PID 12345) has been shut down.
 - ✅ **Watch logs easily** - `simLogs` is much shorter than the full tail command
 - ✅ **Consistent workflow** - Same commands work regardless of current directory
 
+## GitHub Issues Management Scripts
+
+A suite of interactive CLI agents for managing GitHub Issues directly from your terminal. These scripts provide a guided, user-friendly way to create, search, and manage issues without leaving the command line.
+
+### Prerequisites
+
+- **GitHub CLI (gh)**: Required for all issue management scripts
+  - Installation: https://cli.github.com/
+  - macOS: `brew install gh`
+  - Linux: See https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+- **Authentication**: Run `gh auth login` before first use
+
+### issue.sh - Main Issues Manager
+
+The central hub for all GitHub Issues operations. Provides an interactive menu-driven interface.
+
+**Start the issues manager:**
+```bash
+./scripts/issue.sh
+```
+
+**Features:**
+- 🐛 Report bugs with guided prompts
+- 💡 Request features with templates
+- 🔍 Search existing issues
+- 📋 View and manage specific issues
+- 📊 Browse by component, priority, or status
+- Automatic duplicate detection before submission
+
+**Expected Interface:**
+```
+╔═══════════════════════════════════════════════════════╗
+║           GitHub Issues Manager v1.0                  ║
+║           SimCity Three.js Clone                      ║
+╚═══════════════════════════════════════════════════════╝
+
+Repository Status:
+  📂 Open Issues: 15
+  🔨 In Progress: 3
+
+╔════════════════════════════════════════════════════╗
+║                 MAIN MENU                          ║
+╚════════════════════════════════════════════════════╝
+
+Create:
+  1) 🐛 Report a Bug
+  2) 💡 Request a Feature
+
+Browse:
+  3) 🔍 Search Issues
+  4) 📋 View Specific Issue
+  ...
+```
+
+### issue-bug.sh - Bug Report Agent
+
+Interactive bug reporting with automatic duplicate detection.
+
+**Create a bug report:**
+```bash
+./scripts/issue-bug.sh
+```
+
+**Workflow:**
+1. Enter bug title
+2. Automatic search for duplicates
+3. Describe the bug (what vs expected)
+4. Provide reproduction steps
+5. Paste console errors (optional)
+6. Select priority (critical/high/medium/low)
+7. Preview and confirm
+8. Issue created with labels
+
+**Example Session:**
+```bash
+$ ./scripts/issue-bug.sh
+
+╔════════════════════════════════════════╗
+║    🐛 Bug Report Agent                 ║
+╚════════════════════════════════════════╝
+
+Step 1/6: What's the bug?
+Bug title: Buildings disappear after loading
+
+Step 2/6: Checking for duplicates...
+✓ No obvious duplicates found
+
+Step 3/6: Describe the bug
+What's happening vs what should happen?
+---
+All buildings disappear when I load a saved city
+^D
+
+Step 4/6: Steps to reproduce
+1. Build several residential buildings
+2. Save game
+3. Refresh page
+4. Load save
+5. Buildings are gone
+^Enter
+
+Step 5/6: Console errors (optional)
+TypeError: building.setMesh is not a function
+^D
+
+Step 6/6: How severe is this bug?
+1) Critical - Game crashes
+Select priority: 1
+
+✓ Bug report created successfully!
+Issue URL: https://github.com/sergeville/simcity-threejs-clone/issues/42
+```
+
+### issue-feature.sh - Feature Request Agent
+
+Interactive feature request creation with duplicate checking.
+
+**Request a feature:**
+```bash
+./scripts/issue-feature.sh
+```
+
+**Workflow:**
+1. Enter feature title
+2. Automatic duplicate search
+3. Describe what and why
+4. Explain how it should work
+5. Select affected components
+6. Preview and confirm
+7. Issue created with labels
+
+**Example Session:**
+```bash
+$ ./scripts/issue-feature.sh
+
+╔════════════════════════════════════════╗
+║    💡 Feature Request Agent            ║
+╚════════════════════════════════════════╝
+
+Step 1/5: What feature do you want?
+Feature title: Add subway transit system
+
+Step 2/5: Checking for duplicates...
+✓ No obvious duplicates found
+
+Step 3/5: Describe your feature
+Large cities need underground rail transit
+^D
+
+Step 4/5: How should it work?
+- New building: Subway Station ($50k)
+- Underground tunnels
+- Reduces traffic by 40%
+^D
+
+Step 5/5: Which parts of the game does this affect?
+1) UI/Interface  2) Simulation  3) Economy  ...
+Select components: 2 6
+
+✓ Feature request created successfully!
+```
+
+### issue-search.sh - Issue Search Agent
+
+Interactive search interface with multiple search modes.
+
+**Search for issues:**
+```bash
+./scripts/issue-search.sh
+```
+
+**Search Options:**
+1. **Search by keywords** - Find issues matching text
+2. **Browse by component** - Filter by UI, simulation, economy, etc.
+3. **Browse by priority** - Critical, high, medium, low
+4. **Show recent issues** - Latest 10 issues
+5. **Show in progress** - What's being worked on
+
+**Example Session:**
+```bash
+$ ./scripts/issue-search.sh
+
+╔════════════════════════════════════════╗
+║    🔍 Issue Search Agent               ║
+╚════════════════════════════════════════╝
+
+How do you want to search?
+1) Search by keywords
+2) Browse by component
+3) Browse by priority
+Select option: 1
+
+Enter search keywords: save crash
+
+Showing both open AND closed issues...
+
+#42  [BUG] Buildings disappear after loading    (Open)  bug,critical,save-load
+#12  [BUG] Save file corruption with 1000+ cit  (Closed) bug,high,save-load
+```
+
+### issue-view.sh - Issue View & Management Agent
+
+View details and perform actions on specific issues.
+
+**View an issue:**
+```bash
+./scripts/issue-view.sh 42
+# or run without number for interactive prompt
+./scripts/issue-view.sh
+```
+
+**Available Actions:**
+1. Add a comment
+2. Close the issue
+3. Reopen the issue
+4. Add labels
+5. Mark as "in progress"
+6. View in browser
+
+**Example Session:**
+```bash
+$ ./scripts/issue-view.sh 42
+
+Loading issue #42...
+
+[BUG] Buildings disappear after loading save file
+
+  All buildings disappear when loading a saved city...
+
+  Labels: bug, critical, save-load
+  State: Open
+  Created: 2 days ago
+
+What would you like to do?
+1) Add a comment
+2) Close this issue
+5) Mark as 'in progress'
+Select option: 5
+
+✓ Marked as 'in progress'
+Suggested command:
+  git checkout -b fix/issue-42
+```
+
+### Shell Aliases for Issue Management
+
+Add these to your `~/.bashrc` or `~/.zshrc` for quick access:
+
+```bash
+# GitHub Issues Management Aliases
+alias simIssue='(cd [project-path]/simcity-threejs-clone && ./scripts/issue.sh)'
+alias simBug='(cd [project-path]/simcity-threejs-clone && ./scripts/issue-bug.sh)'
+alias simFeature='(cd [project-path]/simcity-threejs-clone && ./scripts/issue-feature.sh)'
+alias simSearch='(cd [project-path]/simcity-threejs-clone && ./scripts/issue-search.sh)'
+```
+
+**Example:** Replace `[project-path]` with your actual project path:
+```bash
+alias simIssue='(cd /Users/john/Documents/simcity-threejs-clone && ./scripts/issue.sh)'
+```
+
+**Usage after setup:**
+```bash
+simIssue      # Open main issues manager
+simBug        # Quick bug report
+simFeature    # Quick feature request
+simSearch     # Search issues
+```
+
+### Workflow Integration
+
+**Typical Development Workflow:**
+
+1. **Find or report a bug:**
+   ```bash
+   simIssue     # Open issues manager
+   # Select option 1 (Report a Bug)
+   # Issue #42 created
+   ```
+
+2. **Start working on it:**
+   ```bash
+   simIssue     # Open issues manager
+   # Select option 4 (View Specific Issue)
+   # Enter issue number: 42
+   # Select option 5 (Mark as in progress)
+
+   # Create branch
+   git checkout -b fix/issue-42
+   ```
+
+3. **Make changes and commit:**
+   ```bash
+   # Make your code changes
+   git add .
+   git commit -m "Fix building mesh restoration - Fixes #42"
+   git push origin fix/issue-42
+   ```
+
+4. **Issue auto-closes when PR merges** (if you used "Fixes #42" in commit)
+
+### Benefits of CLI Issue Management
+
+- ✅ **Never leave terminal** - Full GitHub Issues workflow from CLI
+- ✅ **Guided process** - Interactive prompts prevent missing info
+- ✅ **Duplicate detection** - Automatic search before creating
+- ✅ **Quick access** - Aliases work from any directory
+- ✅ **Rich formatting** - Colorful, easy-to-read output
+- ✅ **Faster workflow** - No browser tab switching needed
+
 ## Alternative: Direct npm Commands
 
 You can also run the dev server directly without using the script:
