@@ -14,6 +14,17 @@ After that, clone this repository, navigate to the root directory and run the fo
 npm run dev
 ```
 
+## Found a Bug or Have an Idea?
+
+This project uses GitHub Issues for tracking bugs and feature requests with **automatic duplicate detection**:
+
+- **🐛 Report a Bug:** [Create Bug Report](https://github.com/sergeville/simcity-threejs-clone/issues/new/choose)
+- **💡 Request a Feature:** [Create Feature Request](https://github.com/sergeville/simcity-threejs-clone/issues/new/choose)
+- **📋 View All Issues:** [Browse Issues](https://github.com/sergeville/simcity-threejs-clone/issues)
+- **📚 Quick Reference:** [How to Use GitHub Issues](docs/development/USING_GITHUB_ISSUES.md)
+
+The system automatically checks for duplicates using context-based matching, so you'll know if your issue has already been reported or fixed!
+
 ## Documentation
 
 Comprehensive documentation is available in the [`/docs`](docs/) folder:

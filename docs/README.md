@@ -13,7 +13,8 @@ This repository contains comprehensive documentation organized by topic:
 ### For Developers
 - [Development Guides](development/) - How to contribute and build
   - [Contributing](development/CONTRIBUTING.md) - Contribution guidelines
-  - [GitHub Issues Guide](development/GITHUB_ISSUES_GUIDE.md) - How to report bugs and request features
+  - [Using GitHub Issues](development/USING_GITHUB_ISSUES.md) - Quick start guide for tracking features and bugs
+  - [GitHub Issues Guide](development/GITHUB_ISSUES_GUIDE.md) - Complete reference for issue templates and workflows
   - [Resolved Issues](development/RESOLVED_ISSUES.md) - Historical issues and fixes
   - [AI-Assisted Development](development/AI_ASSISTED_DEV.md) - How this project uses AI
   - [Testing Checklist](development/TESTING_CHECKLIST.md) - Comprehensive testing guide
