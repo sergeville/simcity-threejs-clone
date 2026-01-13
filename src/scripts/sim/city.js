@@ -4,7 +4,11 @@ import { createBuilding } from './buildings/buildingFactory.js';
 import { Tile } from './tile.js';
 import { VehicleGraph } from './vehicles/vehicleGraph.js';
 import { PowerService } from './services/power.js';
+import { EconomyService } from './services/economy.js';
+import { CitizenManager } from './services/citizenManager.js';
 import { SimService } from './services/simService.js';
+import { TerrainGenerator } from './terrainGenerator.js';
+import { TimeManager } from './timeManager.js';
 
 export class City extends THREE.Group {
   /**
@@ -29,9 +33,14 @@ export class City extends THREE.Group {
    */
   size = 16;
   /**
-   * The current simulation time
+   * The current simulation time (legacy - days)
    */
   simTime = 0;
+  /**
+   * Time manager for always-running simulation
+   * @type {TimeManager}
+   */
+  timeManager = new TimeManager();
   /**
    * 2D array of tiles that make up the city
    * @type {Tile[][]}
@@ -48,15 +57,19 @@ export class City extends THREE.Group {
 
     this.name = name;
     this.size = size;
-    
+
     this.add(this.debugMeshes);
     this.add(this.root);
+
+    // Generate natural terrain
+    const terrainMap = TerrainGenerator.generate(size);
 
     this.tiles = [];
     for (let x = 0; x < this.size; x++) {
       const column = [];
       for (let y = 0; y < this.size; y++) {
         const tile = new Tile(x, y);
+        tile.terrain = terrainMap[x][y]; // Set generated terrain
         tile.refreshView(this);
         this.root.add(tile);
         column.push(tile);
@@ -65,8 +78,14 @@ export class City extends THREE.Group {
     }
 
     this.services = [];
+    this.services.push(new EconomyService());
     this.services.push(new PowerService());
-    
+
+    // Create citizen manager for visual representation
+    const citizenManager = new CitizenManager();
+    this.services.push(citizenManager);
+    this.root.add(citizenManager.citizenGroup);
+
     this.vehicleGraph = new VehicleGraph(this.size);
     this.debugMeshes.add(this.vehicleGraph);
   }
@@ -84,6 +103,14 @@ export class City extends THREE.Group {
       }
     }
     return population;
+  }
+
+  /**
+   * Get the economy service
+   * @returns {EconomyService}
+   */
+  get economy() {
+    return this.services.find(s => s instanceof EconomyService);
   }
 
   /** Returns the title at the coordinates. If the coordinates
@@ -109,6 +136,9 @@ export class City extends THREE.Group {
   simulate(steps = 1) {
     let count = 0;
     while (count++ < steps) {
+      // Update time manager (always-running simulation)
+      this.timeManager.tick();
+
       // Update services
       this.services.forEach((service) => service.simulate(this));
 
@@ -125,18 +155,55 @@ export class City extends THREE.Group {
   /**
    * Places a building at the specified coordinates if the
    * tile does not already have a building on it
-   * @param {number} x 
-   * @param {number} y 
-   * @param {string} buildingType 
+   * @param {number} x
+   * @param {number} y
+   * @param {string} buildingType
+   * @returns {boolean} True if building was placed successfully
    */
   placeBuilding(x, y, buildingType) {
     const tile = this.getTile(x, y);
 
-    // If the tile doesnt' already have a building, place one there
+    // If the tile doesn't already have a building, check if we can afford it
     if (tile && !tile.building) {
+      // Check if terrain is buildable
+      if (!TerrainGenerator.isBuildable(tile.terrain)) {
+        console.warn(`Cannot build on ${tile.terrain} terrain at (${x}, ${y})`);
+        return false;
+      }
+
+      // Check if player can afford the building
+      const economy = this.economy;
+      if (economy && !economy.canAfford(buildingType)) {
+        // Show insufficient funds message
+        if (window.ui) {
+          this.#showInsufficientFundsMessage(buildingType, economy.getBuildingCost(buildingType));
+        }
+        return false;
+      }
+
+      // Deduct construction cost
+      if (economy) {
+        economy.deductConstructionCost(buildingType);
+      }
+
+      // Place the building
       tile.setBuilding(createBuilding(x, y, buildingType));
       tile.refreshView(this);
-      
+
+      // Activity feed notification
+      if (window.activityFeed) {
+        const buildingNames = {
+          'residential': 'Residential Zone',
+          'commercial': 'Commercial Zone',
+          'industrial': 'Industrial Zone',
+          'road': 'Road',
+          'power-plant': 'Power Plant',
+          'power-line': 'Power Line'
+        };
+        const name = buildingNames[buildingType] || buildingType;
+        window.activityFeed.construction(`Built ${name} at (${x}, ${y})`);
+      }
+
       // Update buildings on adjacent tile in case they need to
       // change their mesh (e.g. roads)
       this.getTile(x - 1, y)?.refreshView(this);
@@ -147,7 +214,21 @@ export class City extends THREE.Group {
       if (tile.building.type === BuildingType.road) {
         this.vehicleGraph.updateTile(x, y, tile.building);
       }
+
+      return true;
     }
+
+    return false;
+  }
+
+  /**
+   * Show insufficient funds message to player
+   * @param {string} buildingType
+   * @param {number} cost
+   */
+  #showInsufficientFundsMessage(buildingType, cost) {
+    console.warn(`Insufficient funds! ${buildingType} costs $${cost}, you have $${Math.floor(this.economy.funds)}`);
+    // Future: Show UI notification
   }
 
   /**
@@ -161,6 +242,11 @@ export class City extends THREE.Group {
     if (tile.building) {
       if (tile.building.type === BuildingType.road) {
         this.vehicleGraph.updateTile(x, y, null);
+      }
+
+      // Activity feed notification
+      if (window.activityFeed) {
+        window.activityFeed.construction(`Demolished building at (${x}, ${y})`, '🏗️');
       }
 
       tile.building.dispose();

@@ -5,9 +5,9 @@ const DEG2RAD = Math.PI / 180.0;
 const RIGHT_MOUSE_BUTTON = 2;
 
 // Camera constraints
-const CAMERA_SIZE = 5;
+const CAMERA_SIZE = 15; // Increased for larger map
 const MIN_CAMERA_RADIUS = 0.1;
-const MAX_CAMERA_RADIUS = 5;
+const MAX_CAMERA_RADIUS = 2; // Allow more zoom out
 const MIN_CAMERA_ELEVATION = 45;
 const MAX_CAMERA_ELEVATION = 45;
 
@@ -29,23 +29,43 @@ export class CameraManager {
       CAMERA_SIZE / 2,
       CAMERA_SIZE / -2, 1, 1000);
     this.camera.layers.enable(1);
-    
-    this.cameraOrigin = new THREE.Vector3(8, 0, 8);
-    this.cameraRadius = 0.5;
+
+    this.cameraOrigin = new THREE.Vector3(64, 0, 64); // Center of 128x128 map
+    this.cameraRadius = 0.15; // Start VERY zoomed out for massive map
     this.cameraAzimuth = 225;
     this.cameraElevation = 45;
+
+    /**
+     * Object to follow (if any)
+     * @type {THREE.Object3D | null}
+     */
+    this.followTarget = null;
 
     this.updateCameraPosition();
 
     window.ui.gameWindow.addEventListener('wheel', this.onMouseScroll.bind(this), false);
     window.ui.gameWindow.addEventListener('mousedown', this.onMouseMove.bind(this), false);
     window.ui.gameWindow.addEventListener('mousemove', this.onMouseMove.bind(this), false);
+
+    // ESC key to stop following
+    window.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && this.followTarget) {
+        this.stopFollowing();
+      }
+    });
   }
 
   /**
     * Applies any changes to camera position/orientation
     */
   updateCameraPosition() {
+    // Update camera origin to follow target if set
+    if (this.followTarget) {
+      this.cameraOrigin.x = this.followTarget.position.x;
+      this.cameraOrigin.z = this.followTarget.position.z;
+      this.cameraOrigin.y = 0; // Keep y at ground level
+    }
+
     this.camera.zoom = this.cameraRadius;
     this.camera.position.x = 100 * Math.sin(this.cameraAzimuth * DEG2RAD) * Math.cos(this.cameraElevation * DEG2RAD);
     this.camera.position.y = 100 * Math.sin(this.cameraElevation * DEG2RAD);
@@ -54,6 +74,34 @@ export class CameraManager {
     this.camera.lookAt(this.cameraOrigin);
     this.camera.updateProjectionMatrix();
     this.camera.updateMatrixWorld();
+  }
+
+  /**
+   * Start following an object
+   * @param {THREE.Object3D} target
+   */
+  followObject(target) {
+    this.followTarget = target;
+
+    // Zoom in a bit when following
+    this.cameraRadius = 1.5;
+
+    // Show follow indicator
+    if (window.ui) {
+      window.ui.showFollowIndicator(target);
+    }
+  }
+
+  /**
+   * Stop following the current target
+   */
+  stopFollowing() {
+    this.followTarget = null;
+
+    // Hide follow indicator
+    if (window.ui) {
+      window.ui.hideFollowIndicator();
+    }
   }
 
   /**

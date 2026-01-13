@@ -4,6 +4,7 @@ import { CameraManager } from './camera.js';
 import { InputManager } from './input.js';
 import { City } from './sim/city.js';
 import { SimObject } from './sim/simObject.js';
+import { AIAgent } from './ai/aiAgent.js';
 
 /** 
  * Manager for the Three.js scene. Handles rendering of a `City` object
@@ -28,6 +29,11 @@ export class Game {
    * @type {SimObject | null}
    */
   selectedObject = null;
+  /**
+   * AI agent that can play the game autonomously
+   * @type {AIAgent}
+   */
+  aiAgent = new AIAgent();
 
   constructor(city) {
     this.city = city;
@@ -58,9 +64,15 @@ export class Game {
     window.assetManager = new AssetManager(() => {
       window.ui.hideLoadingText();
 
-      this.city = new City(16);
+      this.city = new City(128); // 128x128 MASSIVE map - 16,384 tiles!
       this.initialize(this.city);
       this.start();
+
+      // Welcome message to activity feed
+      if (window.activityFeed) {
+        window.activityFeed.info('Welcome, Mayor! Your city awaits.', '🏙️');
+        window.activityFeed.info(`Map generated: ${this.city.size}x${this.city.size} (${this.city.size * this.city.size} tiles)`, '🗺️');
+      }
 
       setInterval(this.simulate.bind(this), 1000);
     });
@@ -152,10 +164,14 @@ export class Game {
   simulate() {
     if (window.ui.isPaused) return;
 
+    // AI agent makes decisions before city simulation
+    this.aiAgent.simulate(this.city);
+
     // Update the city data model first, then update the scene
     this.city.simulate(1);
 
     window.ui.updateTitleBar(this);
+    window.ui.updateCitizenStats(this);
     window.ui.updateInfoPanel(this.selectedObject);
   }
 
@@ -190,6 +206,35 @@ export class Game {
     this.selectedObject?.setSelected(false);
     this.selectedObject = this.focusedObject;
     this.selectedObject?.setSelected(true);
+
+    // Check if we clicked on a citizen
+    const clickedMesh = this.#raycast();
+    if (clickedMesh && clickedMesh.type === 'citizen') {
+      // Get the actual mesh from the scene
+      const mesh = this.#findCitizenMesh(clickedMesh.citizen);
+      if (mesh) {
+        this.cameraManager.followObject(mesh);
+      }
+    } else {
+      // Clicked on something else, stop following
+      if (this.cameraManager.followTarget) {
+        this.cameraManager.stopFollowing();
+      }
+    }
+  }
+
+  /**
+   * Find the mesh for a citizen in the scene
+   * @param {Citizen} citizen
+   * @returns {THREE.Mesh | null}
+   */
+  #findCitizenMesh(citizen) {
+    // Find citizen manager service
+    const citizenManager = this.city.services.find(s => s.constructor.name === 'CitizenManager');
+    if (citizenManager && citizenManager.citizenMeshes) {
+      return citizenManager.citizenMeshes.get(citizen.id);
+    }
+    return null;
   }
 
   /**

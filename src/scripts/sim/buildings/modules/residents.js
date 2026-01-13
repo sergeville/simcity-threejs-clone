@@ -36,6 +36,14 @@ export class ResidentsModule extends SimModule {
   }
 
   /**
+   * Returns all residents (for CitizenManager)
+   * @returns {Citizen[]}
+   */
+  getResidents() {
+    return this.#residents;
+  }
+
+  /**
    * Maximuim number of residents that can live in this building
    * @returns {number}
    */
@@ -53,7 +61,13 @@ export class ResidentsModule extends SimModule {
     } else if (this.#zone.development.state === DevelopmentState.developed) {
       // Move in new residents if there is room
       if (this.#residents.length < this.maximum && Math.random() < config.modules.residents.residentMoveInChance) {
-        this.#residents.push(new Citizen(this.#zone));
+        const newCitizen = new Citizen(this.#zone);
+        this.#residents.push(newCitizen);
+
+        // Activity feed notification
+        if (window.activityFeed && Math.random() < 0.2) { // Only show 20% to avoid spam
+          window.activityFeed.citizen(`${newCitizen.name} moved into the city`, '🏠');
+        }
       }
     }
 
@@ -65,7 +79,7 @@ export class ResidentsModule extends SimModule {
   /**
    * Evicts all residents from the building
    */
-  #evictAll() {
+  evictAll() {
     for (const resident of this.#residents) {
       resident.dispose();
     }
@@ -76,7 +90,7 @@ export class ResidentsModule extends SimModule {
    * Handles any clean up needed before a building is removed
    */
   dispose() {
-    this.#evictAll();
+    this.evictAll();
   }
 
   /**

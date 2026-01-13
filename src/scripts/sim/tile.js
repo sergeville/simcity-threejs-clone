@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { Building } from './buildings/building.js';
 import { SimObject } from './simObject.js';
+import { TerrainGenerator } from './terrainGenerator.js';
 
 export class Tile extends SimObject {
   /**
@@ -49,11 +50,26 @@ export class Tile extends SimObject {
     if (this.building?.hideTerrain) {
       this.setMesh(null);
     } else {
-      /**
-       * @type {THREE.Mesh}
-       */
-      const mesh = window.assetManager.getModel(this.terrain, this);
+      // Create terrain mesh based on type
+      const terrainColor = TerrainGenerator.getTerrainColor(this.terrain);
+      const geometry = new THREE.BoxGeometry(1, 0.1, 1);
+      const material = new THREE.MeshLambertMaterial({
+        color: terrainColor
+      });
+
+      // Add height variation for hills and mountains
+      if (this.terrain === 'hill') {
+        geometry.scale(1, 2, 1); // 2x height
+      } else if (this.terrain === 'mountain') {
+        geometry.scale(1, 4, 1); // 4x height
+      }
+
+      const mesh = new THREE.Mesh(geometry, material);
       mesh.name = this.terrain;
+      mesh.userData = this;
+      mesh.receiveShadow = true;
+      mesh.castShadow = this.terrain === 'mountain' || this.terrain === 'hill';
+
       this.setMesh(mesh);
     }
   }
