@@ -677,6 +677,95 @@ simSearch     # Search issues
 
 4. **Issue auto-closes when PR merges** (if you used "Fixes #42" in commit)
 
+### implement-issue.sh - Issue to Agent Converter
+
+**Convert GitHub issues into AI agent implementation prompts.**
+
+This tool fetches a GitHub issue and generates a comprehensive prompt that AI agents (like Claude Code) can use to implement features or fix bugs.
+
+**Generate implementation prompt:**
+```bash
+./scripts/implement-issue.sh 1
+# Or interactive mode:
+./scripts/implement-issue.sh
+```
+
+**What it does:**
+1. Fetches issue from GitHub (#1, #2, etc.)
+2. Analyzes issue type (feature vs bug)
+3. Generates detailed implementation prompt with:
+   - Complete issue description
+   - Step-by-step implementation guide
+   - Project architecture context
+   - Code patterns to follow
+   - Testing checklist
+   - Commit message templates
+   - Success criteria
+
+**Interactive menu:**
+```
+What would you like to do?
+1) View the prompt
+2) Copy prompt to clipboard    ← Paste into Claude Code
+3) Save prompt to file
+4) Open prompt in editor
+5) Send to Claude Code agent
+```
+
+**Example workflow:**
+```bash
+# Create a feature issue
+./scripts/quick-feature.sh "Add weather system"
+# Creates issue #4
+
+# Generate implementation prompt
+./scripts/implement-issue.sh 4
+# Select option 2 (copy to clipboard)
+
+# Paste into Claude Code
+# Agent reads prompt and implements feature automatically
+# Following all project guidelines and patterns
+
+# Agent commits with: "Add weather system - Fixes #4"
+# Issue auto-closes when pushed
+```
+
+**Generated prompt includes:**
+- ✅ Issue summary and full description
+- ✅ Type-specific instructions (feature vs bug)
+- ✅ 7-step implementation workflow
+- ✅ Project architecture context (CLAUDE.md reference)
+- ✅ Code patterns (SimService, Building, etc.)
+- ✅ Files to read for context
+- ✅ Testing guidelines
+- ✅ Commit message templates with issue reference
+- ✅ Success criteria checklist
+
+**For features:**
+- Instructions to use EnterPlanMode for complex features
+- Search existing code patterns
+- Follow project architecture
+- Integration guidelines
+- Testing requirements
+
+**For bugs:**
+- Root cause analysis approach
+- Debugging steps
+- Fix verification checklist
+- Regression testing guidelines
+- RESOLVED_ISSUES.md update instructions
+
+**Full documentation:**
+See [IMPLEMENTATION_GUIDE.md](IMPLEMENTATION_GUIDE.md) for complete usage guide, examples, and workflow integration.
+
+**Benefits:**
+- ✅ AI agents get complete context
+- ✅ Follow project patterns automatically
+- ✅ Proper commit messages
+- ✅ Comprehensive testing
+- ✅ Documentation updates included
+- ✅ Issues auto-close on completion
+
 ### Benefits of CLI Issue Management
 
 - ✅ **Never leave terminal** - Full GitHub Issues workflow from CLI
